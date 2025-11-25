@@ -3,7 +3,7 @@ const Routers = require("./src/router/index");
 const doc = require("./src/lib/docs");
 
 const app = express();
-doc(app)
+doc(app);
 app.use(express.json());
 
 app.use(Routers);

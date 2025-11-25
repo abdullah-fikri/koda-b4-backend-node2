@@ -1,5 +1,5 @@
 const expressJSDocSwagger = require('express-jsdoc-swagger');
-const process = require('node:process')
+const process = require('node:process');
 function doc(app){
 const docConfig = {
     info: {
@@ -13,4 +13,4 @@ const docConfig = {
 expressJSDocSwagger(app)(docConfig);
 
 }
-module.exports = doc
+module.exports = doc;

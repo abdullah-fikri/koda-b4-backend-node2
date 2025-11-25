@@ -29,8 +29,8 @@ function getProducts(req, res){
         res.status(401).json({
             success: false,
             message: "product not products"
-        })
-        return
+        });
+        return;
     }
 
     res.status(200).json({

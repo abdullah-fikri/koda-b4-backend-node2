@@ -14,7 +14,7 @@ const products = [
 
 // get all
 function getAllProducts(name){
-    return products.filter(item => item.name.toLocaleLowerCase().includes(name.toLocaleLowerCase()))
+    return products.filter(item => item.name.toLocaleLowerCase().includes(name.toLocaleLowerCase()));
 }
 
 // get by id
