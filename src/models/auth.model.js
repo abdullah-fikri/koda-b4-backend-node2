@@ -1,5 +1,5 @@
-const dataAuth = []
-let id = 1
+const dataAuth = [];
+let id = 1;
 
 function registerModel(fullName, email, password){
     const newUser = {
@@ -7,17 +7,17 @@ function registerModel(fullName, email, password){
         fullName,
         email,
         password
-    }
-    dataAuth.push(newUser)
-    return newUser
+    };
+    dataAuth.push(newUser);
+    return newUser;
 }
 
 function loginModel(email, password){
-    return dataAuth.find(el => el.email === email && el.password === password)
+    return dataAuth.find(el => el.email === email && el.password === password);
 }
 
 module.exports = {
     registerModel,
     loginModel,
     dataAuth
-}
+};

@@ -1,4 +1,4 @@
-let idProducts = 1
+let idProducts = 1;
 const products = [
     {
         id: idProducts++,
@@ -10,16 +10,16 @@ const products = [
         name: "mie",
         price: 1000
     }
-]
+];
 
 // get all
 function getAllProducts(){
-    return products
+    return products;
 }
 
 // get by id
 function getProductById(id){
-    return products.filter(it => it.id === id)  
+    return products.filter(it => it.id === id);  
 }
 
 // create
@@ -28,9 +28,9 @@ function createProduct(name, price){
         id: idProducts++,
         name,
         price
-    }
-    products.push(newProduct)
-    return newProduct
+    };
+    products.push(newProduct);
+    return newProduct;
 }
 
 // update
@@ -58,4 +58,4 @@ module.exports = {
     createProduct,
     updateProduct,
     deleteProduct
-}
+};
