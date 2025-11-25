@@ -13,8 +13,8 @@ const products = [
 ];
 
 // get all
-function getAllProducts(){
-    return products;
+function getAllProducts(name){
+    return products.filter(item => item.name.toLocaleLowerCase().includes(name.toLocaleLowerCase()))
 }
 
 // get by id
