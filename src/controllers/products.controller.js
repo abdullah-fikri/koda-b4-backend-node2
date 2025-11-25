@@ -24,6 +24,14 @@ function getProducts(req, res){
         results = results.sort((a, b) => b.price - a.price);
     }
 
+    if(results.length < 1){
+        res.status(401).json({
+            success: false,
+            message: "product not products"
+        })
+        return
+    }
+
     res.status(200).json({
         success: true,
         message: "list all products",
