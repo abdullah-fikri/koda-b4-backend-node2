@@ -1,0 +1,58 @@
+###
+POST /auth/register
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "fullName": "fiki",
+    "email": "fiki@mail.com",
+    "password": "123"
+}
+
+###
+POST /auth/login
+Host: localhost:9000
+Content-Type: application/json
+
+{
+     "email": "fiki@mail.com",
+     "password": "123"
+}
+
+
+/// products
+###
+GET /products
+Host: localhost:9000
+
+###
+GET /products/1
+Host: localhost:9000
+
+
+/// create products
+###
+POST /products
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "name": "mie ayam",
+    "price": "12000"
+}
+
+/// edit products
+### 
+PATCH /products/3
+Host: localhost:9000
+Content-Type: application/json
+
+{
+    "name": "indomie",
+    "price": "2000"
+}
+
+/// delete products
+###
+DELETE /products/2
+Host: localhost:9000

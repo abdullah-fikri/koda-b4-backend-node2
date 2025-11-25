@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "name": "minitask1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "dev": "node --watch index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
