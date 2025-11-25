@@ -13,6 +13,7 @@ const {
  * @param {string} search.query - search products by name
  * @param {string} sort.query - cheap or expensive
  * @return {object} 200 - success response
+ * @return {object} 401 - not found response 
  */
 function getProducts(req, res){
     const {search='', sort=''} = req.query;
