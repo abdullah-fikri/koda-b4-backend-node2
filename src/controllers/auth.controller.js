@@ -1,5 +1,6 @@
 import authModel from "../models/auth.model.js";
 import { validationResult } from "express-validator";
+import {hashPassword, verifyPassword} from "../lib/hashingPassword.js";
 
 const { registerModel, loginModel } = authModel;
 
@@ -27,7 +28,8 @@ async function authRegister(req, res){
             });
         }
         const { fullName, email, password } = req.body;
-        const newUser = await registerModel(fullName, email, password);
+        const hashed = await hashPassword(password)
+        const newUser = await registerModel(fullName, email, hashed);
     
         res.status(200).json({
             success: true,
@@ -55,37 +57,45 @@ async function authRegister(req, res){
  * @returns {object} 200 - login success
  * @returns {object} 400 - wrong email or password
  */
-async function authLogin(req, res){
+async function authLogin(req, res) {
     try {
-        const { email, password } = req.body;
-        const user = loginModel(email, password);
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({
-                success: false,
-                message: "validation error",
-                result: errors.array()
-            });
-        }
-    
-        if (!user){
-            return res.status(400).json({
-                success: false,
-                message: "wrong email or password"
-            });
-        }
-    
-        return res.status(200).json({
-            success: true,
-            message: "login success"
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: "validation error",
+          result: errors.array(),
         });
+      }
+      const { email, password } = req.body;
+      const user = await loginModel(email);
+      if (!user) {
+        return res.status(400).json({
+          success: false,
+          message: "wrong email or password",
+        });
+      }
+
+      const verify = await verifyPassword(password, user.password);
+      if (!verify) {
+        return res.status(400).json({
+          success: false,
+          message: "wrong email or password",
+        });
+      }
+  
+      return res.status(200).json({
+        success: true,
+        message: "login success",
+      });
+  
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        })
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
     }
-}
+  }
 
 export default {
     authRegister,

@@ -14,14 +14,11 @@ async function registerModel(fullName, email, password) {
     return newUser;
 }
 
-async function loginModel(email, password) {
+async function loginModel(email) {
     const user = await prisma.user.findUnique({
         where: { email }
     });
-    if (user && user.password === password) {
-        return user;
-    }
-    return null;
+    return user;
 }
 
 export default {
