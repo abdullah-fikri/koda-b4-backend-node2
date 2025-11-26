@@ -1,8 +1,8 @@
 -- CreateTable
 CREATE TABLE "users" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "fullname" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "fullName" TEXT NOT NULL,
     "password" TEXT NOT NULL
 );
 
@@ -10,7 +10,7 @@ CREATE TABLE "users" (
 CREATE TABLE "products" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
-    "price" REAL NOT NULL,
+    "price" INTEGER NOT NULL,
     "image" TEXT
 );
 

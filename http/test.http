@@ -4,8 +4,8 @@ Host: localhost:8000
 Content-Type: application/json
 
 {
-    "fullName": "fiki",
-    "email": "fiki@mail.com",
+    "fullname": "fiki",
+    "email": "fiki12345678@mail.com",
     "password": "12345678"
 }
 
@@ -15,8 +15,8 @@ Host: localhost:8000
 Content-Type: application/json
 
 {
-     "email": "fiki@mail.com",
-     "password": "12345678"
+    "email": "fiki12345678@mail.com",
+    "password": "12345678"
 }
 
 
@@ -24,10 +24,13 @@ Content-Type: application/json
 ###
 GET /products
 Host: localhost:8000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY0MTcwNzc5LCJleHAiOjE3NjQxNzE2Nzl9.hStN2_bDZnjXxYjngNw2rBPd5TbmfQhYXmSDbVOCcSU
 
 ###
-GET /products/4
+GET /products/1
 Host: localhost:8000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY0MTcwNzc5LCJleHAiOjE3NjQxNzE2Nzl9.hStN2_bDZnjXxYjngNw2rBPd5TbmfQhYXmSDbVOCcSU
+
 
 
 /// create products
@@ -35,6 +38,8 @@ Host: localhost:8000
 POST /products
 Host: localhost:8000
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY0MTUyNTgxLCJleHAiOjE3NjQyMDY1ODF9.tCoRfQgNE9bREp5oPubwI2ZVwB88YEEY2WTcwSsluIk
+
 
 {
     "name": "mie ayam",

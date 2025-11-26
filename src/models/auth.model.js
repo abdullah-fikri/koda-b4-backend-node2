@@ -3,10 +3,10 @@ let id = 1;
 import prisma from "../lib/prisma.js";
 
 
-async function registerModel(fullName, email, password) {
+async function registerModel(fullname, email, password) {
     const newUser = await prisma.user.create({  
         data: {
-            fullName,
+            fullname,
             email,
             password
         }

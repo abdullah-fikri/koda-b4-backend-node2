@@ -7,7 +7,7 @@ const router = Router();
 router.post(
   "/auth/register",
   checkSchema({
-    fullName: { isLength: {options: { min: 3 },},
+    fullname: { isLength: {options: { min: 3 },},
       errorMessage: "Full name must be at 3 characters", },
 
     email: { isEmail: true,

@@ -28,9 +28,9 @@ async function authRegister(req, res){
                 result: errors.array()
             });
         }
-        const { fullName, email, password } = req.body;
+        const { fullname, email, password } = req.body;
         const hashed = await hashPassword(password)
-        const newUser = await registerModel(fullName, email, hashed);
+        const newUser = await registerModel(fullname, email, hashed);
     
         res.status(200).json({
             success: true,
