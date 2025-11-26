@@ -21,7 +21,11 @@
   "scripts": {
     "dev": "node --watch index.js",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "migrate:create": "prisma migrate dev --name",
+    "migrate:run": "prisma migrate dev",
+    "migrate:reset": "prisma migrate reset",
+    "orm:generate": "prisma generate"
   },
   "keywords": [],
   "author": "",
