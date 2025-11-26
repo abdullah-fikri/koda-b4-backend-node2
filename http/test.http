@@ -1,50 +1,50 @@
 ###
 POST /auth/register
-Host: localhost:9000
+Host: localhost:8000
 Content-Type: application/json
 
 {
     "fullName": "fiki",
     "email": "fiki@mail.com",
-    "password": "123"
+    "password": "12345678"
 }
 
 ###
 POST /auth/login
-Host: localhost:9000
+Host: localhost:8000
 Content-Type: application/json
 
 {
      "email": "fiki@mail.com",
-     "password": "123"
+     "password": "12345678"
 }
 
 
 /// products
 ###
 GET /products
-Host: localhost:9000
+Host: localhost:8000
 
 ###
 GET /products/2
-Host: localhost:9000
+Host: localhost:8000
 
 
 /// create products
 ###
 POST /products
-Host: localhost:9000
+Host: localhost:8000
 Content-Type: application/json
 
 {
     "name": "mie ayam",
-    "price": "12000"
+    "price": 12000
 }
 
 /// edit products
 ### 
 PATCH /products/3
-Host: localhost:9000
+Host: localhost:8000
 Content-Type: application/json
 
 {
@@ -55,4 +55,4 @@ Content-Type: application/json
 /// delete products
 ###
 DELETE /products/3
-Host: localhost:9000
+Host: localhost:8000

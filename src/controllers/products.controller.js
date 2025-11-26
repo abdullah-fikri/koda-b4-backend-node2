@@ -6,6 +6,7 @@ const {
     updateProduct,
     deleteProduct
 } = require("../models/products.model");
+const { validationResult } = require("express-validator");
 
 /**
  * GET /products
@@ -80,6 +81,14 @@ function getProduct(req, res){
  */
 function create(req, res){
     const { name, price } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            success: false,
+            message: "validation error",
+            result: errors.array()
+        });
+    }
     const newProduct = createProduct(name, price);
 
     res.status(200).json({
@@ -142,8 +151,16 @@ function uploadPictureProduct(req, res) {
 function update(req, res){
     const id = parseInt(req.params.id);
     const { name, price } = req.body;
-
     const updated = updateProduct(id, name, price);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            success: false,
+            message: "validation error",
+            result: errors.array()
+        });
+    }
+
 
     if (!updated){
         return res.status(400).json({

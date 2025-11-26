@@ -8,6 +8,6 @@ app.use(express.json());
 
 app.use(Routers);
 
-app.listen(9000, ()=>{
-    console.log("Running on http://localhost:9000");
+app.listen(8000, ()=>{
+    console.log("Running on http://localhost:8000");
 });

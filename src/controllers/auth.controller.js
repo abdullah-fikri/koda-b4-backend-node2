@@ -1,5 +1,7 @@
 const { registerModel } = require("../models/auth.model");
 const { loginModel } = require("../models/auth.model");
+const { validationResult } = require("express-validator");
+
 
 /**
  * POST /auth/register
@@ -15,6 +17,14 @@ const { loginModel } = require("../models/auth.model");
  * @returns {object} 200 - success response
  */
 function authRegister(req, res){
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            success: false,
+            message: "validation error",
+            result: errors.array()
+        });
+    }
     const { fullName, email, password } = req.body;
     const newUser = registerModel(fullName, email, password);
 
@@ -41,6 +51,14 @@ function authRegister(req, res){
 function authLogin(req, res){
     const { email, password } = req.body;
     const user = loginModel(email, password);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            success: false,
+            message: "validation error",
+            result: errors.array()
+        });
+    }
 
     if (!user){
         return res.status(400).json({
