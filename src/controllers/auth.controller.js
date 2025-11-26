@@ -1,6 +1,7 @@
 import authModel from "../models/auth.model.js";
 import { validationResult } from "express-validator";
 import {hashPassword, verifyPassword} from "../lib/hashingPassword.js";
+import jwt from "jsonwebtoken"
 
 const { registerModel, loginModel } = authModel;
 
@@ -69,6 +70,9 @@ async function authLogin(req, res) {
       }
       const { email, password } = req.body;
       const user = await loginModel(email);
+      const token = jwt.sign({id: user.id}, process.env.APP_SECRET, {
+        expiresIn: "15m"
+      })
       if (!user) {
         return res.status(400).json({
           success: false,
@@ -87,6 +91,7 @@ async function authLogin(req, res) {
       return res.status(200).json({
         success: true,
         message: "login success",
+        result: token
       });
   
     } catch (error) {
