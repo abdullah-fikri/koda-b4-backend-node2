@@ -26,7 +26,7 @@ GET /products
 Host: localhost:8000
 
 ###
-GET /products/2
+GET /products/4
 Host: localhost:8000
 
 
@@ -43,7 +43,7 @@ Content-Type: application/json
 
 /// edit products
 ### 
-PATCH /products/3
+PATCH /products/4
 Host: localhost:8000
 Content-Type: application/json
 
