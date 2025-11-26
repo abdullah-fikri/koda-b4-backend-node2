@@ -1,3 +1,6 @@
+
+import prisma from "../lib/prisma.js";
+
 let idProducts = 1;
 const products = [
     {
@@ -15,47 +18,71 @@ const products = [
 ];
 
 // get all
-function getAllProducts(name){
-    return products.filter(item => item.name.toLocaleLowerCase().includes(name.toLocaleLowerCase()));
+async function getAllProducts(name = '') {
+    const results = await prisma.product.findMany({
+        where: {
+            name: {
+                contains: name,
+            }
+        }
+    });
+    return results;
 }
 
 // get by id
-function getProductById(id){
-    return products.filter(it => it.id === id);  
+async function getProductById(id) {
+    const result = await prisma.product.findUnique({
+        where: { 
+            id: id 
+        }
+    });
+    return result;
 }
 
 // create
-function createProduct(name, price){
-    const newProduct = {
-        id: idProducts++,
-        name,
-        price
-    };
-    products.push(newProduct);
+async function createProduct(name, price, image = null) {
+    const newProduct = await prisma.product.create({
+        data: {
+            name,
+            price,
+            image  
+        }
+    });
     return newProduct;
 }
 
 // update
-function updateProduct(id, name, price, picture){
-    const index = products.findIndex(item => item.id === id);
-    if (index === -1) return null;
+async function updateProduct(id, name, price, image = null) {
+    try {
+        const newData = {};
+        if (name !== undefined) newData.name = name;
+        if (price !== undefined) newData.price = price;
+        if (image !== undefined) newData.image = image;
 
-    name ? products[index].name = name : products[index].name
-    price ? products[index].price = price : products[index].price
-    picture ? products[index].picture = picture : products[index].picture
-    return products[index];
+        const updated = await prisma.product.update({
+            where: { id },
+            data: newData
+        });
+        return updated;
+        
+    } catch (error) {
+        return null;
+    }
 }
 
 // delete
-function deleteProduct(id){
-    const index = products.findIndex(it => it.id === id);
-    if (index === -1) return false;
-
-    products.splice(index, 1);
-    return true;
+async function deleteProduct(id) {
+    try {
+        await prisma.product.delete({
+            where: { id }
+        });
+        return true;
+    } catch (error) {
+        return false;
+    }
 }
 
-module.exports = {
+export default {
     getAllProducts,
     getProductById,
     createProduct,

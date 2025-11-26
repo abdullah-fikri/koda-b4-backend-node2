@@ -1,6 +1,8 @@
-const router = require("express").Router();
-const { checkSchema } = require("express-validator");
-const auth = require("../controllers/auth.controller");
+import { Router } from "express";
+import { checkSchema } from "express-validator";
+import auth from "../controllers/auth.controller.js";
+
+const router = Router();
 
 router.post(
   "/auth/register",
@@ -26,4 +28,4 @@ router.post(
   auth.authLogin
 );
 
-module.exports = router;
+export default router;

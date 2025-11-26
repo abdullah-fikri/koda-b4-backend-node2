@@ -1,6 +1,6 @@
-const expressJSDocSwagger = require('express-jsdoc-swagger');
-const process = require('node:process');
-function doc(app){
+import expressJSDocSwagger from 'express-jsdoc-swagger';
+import process from 'node:process';
+export default function doc(app){
 const docConfig = {
     info: {
       version: '1.0.0',
@@ -13,4 +13,3 @@ const docConfig = {
 expressJSDocSwagger(app)(docConfig);
 
 }
-module.exports = doc;

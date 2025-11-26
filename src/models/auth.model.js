@@ -1,22 +1,30 @@
 const dataAuth = [];
 let id = 1;
+import prisma from "../lib/prisma.js";
 
-function registerModel(fullName, email, password){
-    const newUser = {
-        id: id++,
-        fullName,
-        email,
-        password
-    };
-    dataAuth.push(newUser);
+
+async function registerModel(fullName, email, password) {
+    const newUser = await prisma.user.create({  
+        data: {
+            fullName,
+            email,
+            password
+        }
+    });
     return newUser;
 }
 
-function loginModel(email, password){
-    return dataAuth.find(el => el.email === email && el.password === password);
+async function loginModel(email, password) {
+    const user = await prisma.user.findUnique({
+        where: { email }
+    });
+    if (user && user.password === password) {
+        return user;
+    }
+    return null;
 }
 
-module.exports = {
+export default {
     registerModel,
     loginModel,
     dataAuth

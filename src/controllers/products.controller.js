@@ -1,12 +1,15 @@
-const upload = require("../lib/upload");
+import upload from "../lib/upload.js";
+import productsModel from "../models/products.model.js";
+import { validationResult } from "express-validator";
+
 const {
     getAllProducts,
     getProductById,
     createProduct,
     updateProduct,
     deleteProduct
-} = require("../models/products.model");
-const { validationResult } = require("express-validator");
+} = productsModel;
+
 
 /**
  * GET /products
@@ -17,29 +20,27 @@ const { validationResult } = require("express-validator");
  * @return {object} 200 - success response
  * @return {object} 401 - not found response 
  */
-function getProducts(req, res){
-    const {search='', sort=''} = req.query;
-    let results = getAllProducts(search);
-
-    if (sort === 'cheap') {
-        results = results.sort((a, b) => a.price - b.price);
-    } else if (sort === 'expensive') {
-        results = results.sort((a, b) => b.price - a.price);
+async function getProducts(req, res){
+    try {
+        const {search='', sort=''} = req.query;
+        let results = await getAllProducts(search);
+    
+        if (sort === 'cheap') {
+            results = results.sort((a, b) => a.price - b.price);
+        } else if (sort === 'expensive') {
+            results = results.sort((a, b) => b.price - a.price);
+        }
+        res.status(200).json({
+            success: true,
+            message: "list all products",
+            results
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
     }
-
-    // if(results.length < 1){
-    //     res.status(401).json({
-    //         success: false,
-    //         message: "product not products"
-    //     });
-    //     return;
-    // }
-
-    res.status(200).json({
-        success: true,
-        message: "list all products",
-        results
-    });
 }
 
 /**
@@ -49,22 +50,29 @@ function getProducts(req, res){
  * @tags products
  * @returns {object} 200 - success response
  */
-function getProduct(req, res){
-    const id = parseInt(req.params.id);
-    const result = getProductById(id);
-
-    if (!result){
-        return res.status(400).json({
-            success: false,
-            message: "product not found",
+async function getProduct(req, res){
+    try {
+        const id = parseInt(req.params.id);
+        const result = await getProductById(id);
+    
+        if (!result){
+            return res.status(400).json({
+                success: false,
+                message: "product not found",
+            });
+        }
+    
+        res.status(200).json({
+            success: true,
+            message: "product found",
+            results: result
         });
+    } catch (error) {
+        res.status(500).json({
+            success: false, 
+            message: error.message
+        })
     }
-
-    res.status(200).json({
-        success: true,
-        message: "product found",
-        results: result
-    });
 }
 
 /**
@@ -79,28 +87,37 @@ function getProduct(req, res){
  * }
  * @returns {object} 200 - success response
  */
-function create(req, res){
-    const { name, price } = req.body;
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
+async function create(req, res) {
+    try {
+        const { name, price } = req.body;
+        const errors = validationResult(req);
+        
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                message: "validation error",
+                result: errors.array()
+            });
+        }
+
+        const newProduct = await createProduct(name, parseFloat(price));
+
+        res.status(201).json({
+            success: true,
+            message: "create product success",
+            results: newProduct
+        });
+    } catch (error) {
+        res.status(500).json({
             success: false,
-            message: "validation error",
-            result: errors.array()
+            message: error.message
         });
     }
-    const newProduct = createProduct(name, price);
-
-    res.status(200).json({
-        success: true,
-        message: "create product success",
-        results: newProduct
-    });
 }
 
-function uploadPictureProduct(req, res) {
+async function uploadPictureProduct(req, res) {
     const id = parseInt(req.params.id);
-    const product = getProductById(id);
+    const product = await getProductById(id);
   
     if (!product) {
       return res.status(400).json({
@@ -109,27 +126,35 @@ function uploadPictureProduct(req, res) {
       });
     }
   
-    upload.single("picture")(req, res, (err) => {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: err.message,
-        });
-      }
-  
-      if (!req.file) {
-        return res.status(400).json({
-          success: false,
-          message: "file not available",
-        });
-      }
-      const updated = updateProduct( id,product.name, product.price,req.file.filename)
-  
-      return res.status(200).json({
-        success: true,
-        message: "upload successfully",
-        result: updated,
-      });
+    upload.single("picture")(req, res, async (err) => {
+        try {
+            if (err) {
+              return res.status(400).json({
+                success: false,
+                message: err.message,
+              });
+            }
+        
+            if (!req.file) {
+              return res.status(400).json({
+                success: false,
+                message: "file not available",
+              });
+            }
+            const updated = await updateProduct( id,product.name, product.price,req.file.filename)
+        
+            return res.status(200).json({
+              success: true,
+              message: "upload successfully",
+              result: updated,
+            });
+
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
     });
   }
 
@@ -148,32 +173,44 @@ function uploadPictureProduct(req, res) {
  * @returns {object} 200 - success response
  * @returns {object} 400 - product update error
  */
-function update(req, res){
-    const id = parseInt(req.params.id);
-    const { name, price } = req.body;
-    const updated = updateProduct(id, name, price);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
+async function update(req, res){
+    try {
+        const id = parseInt(req.params.id);
+        const { name, price } = req.body;
+        
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                message: "validation error",
+                result: errors.array()
+            });
+        }
+
+        const updated = await updateProduct(
+            id, 
+            name, 
+            price ? parseFloat(price) : undefined
+        );
+
+        if (!updated){
+            return res.status(404).json({
+                success: false,
+                message: "product not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "product updated successfully",
+            results: updated
+        });
+    } catch (error) {
+        res.status(500).json({
             success: false,
-            message: "validation error",
-            result: errors.array()
+            message: error.message
         });
     }
-
-
-    if (!updated){
-        return res.status(400).json({
-            success: false,
-            message: "product update error"
-        });
-    }
-
-    res.status(200).json({
-        success: true,
-        message: "product updated successfully",
-        results: updated
-    });
 }
 
 /**
@@ -184,24 +221,31 @@ function update(req, res){
  * @returns {object} 200 - success response
  * @returns {object} 400 - product not found
  */
-function remove(req, res){
-    const id = parseInt(req.params.id);
-    const deleted = deleteProduct(id);
+async function remove(req, res){
+    try {
+        const id = parseInt(req.params.id);
+        const deleted = await deleteProduct(id);
 
-    if (!deleted){
-        return res.status(400).json({
+        if (!deleted){
+            return res.status(404).json({
+                success: false,
+                message: "product not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "product deleted"
+        });
+    } catch (error) {
+        res.status(500).json({
             success: false,
-            message: "product not found"
+            message: error.message
         });
     }
-
-    res.status(200).json({
-        success: true,
-        message: "product deleted"
-    });
 }
 
-module.exports = {
+export default {
     getProducts,
     getProduct,
     create,

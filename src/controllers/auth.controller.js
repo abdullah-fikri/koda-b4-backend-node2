@@ -1,7 +1,7 @@
-const { registerModel } = require("../models/auth.model");
-const { loginModel } = require("../models/auth.model");
-const { validationResult } = require("express-validator");
+import authModel from "../models/auth.model.js";
+import { validationResult } from "express-validator";
 
+const { registerModel, loginModel } = authModel;
 
 /**
  * POST /auth/register
@@ -16,23 +16,30 @@ const { validationResult } = require("express-validator");
  * }
  * @returns {object} 200 - success response
  */
-function authRegister(req, res){
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-            success: false,
-            message: "validation error",
-            result: errors.array()
+async function authRegister(req, res){
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                message: "validation error",
+                result: errors.array()
+            });
+        }
+        const { fullName, email, password } = req.body;
+        const newUser = await registerModel(fullName, email, password);
+    
+        res.status(200).json({
+            success: true,
+            message: "register success",
+            result: newUser
         });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
     }
-    const { fullName, email, password } = req.body;
-    const newUser = registerModel(fullName, email, password);
-
-    res.status(200).json({
-        success: true,
-        message: "register success",
-        result: newUser
-    });
 }
 
 /**
@@ -48,32 +55,39 @@ function authRegister(req, res){
  * @returns {object} 200 - login success
  * @returns {object} 400 - wrong email or password
  */
-function authLogin(req, res){
-    const { email, password } = req.body;
-    const user = loginModel(email, password);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-            success: false,
-            message: "validation error",
-            result: errors.array()
+async function authLogin(req, res){
+    try {
+        const { email, password } = req.body;
+        const user = loginModel(email, password);
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                message: "validation error",
+                result: errors.array()
+            });
+        }
+    
+        if (!user){
+            return res.status(400).json({
+                success: false,
+                message: "wrong email or password"
+            });
+        }
+    
+        return res.status(200).json({
+            success: true,
+            message: "login success"
         });
-    }
-
-    if (!user){
-        return res.status(400).json({
+    } catch (error) {
+        res.status(500).json({
             success: false,
-            message: "wrong email or password"
-        });
+            message: error.message
+        })
     }
-
-    return res.status(200).json({
-        success: true,
-        message: "login success"
-    });
 }
 
-module.exports = {
+export default {
     authRegister,
     authLogin
 };
