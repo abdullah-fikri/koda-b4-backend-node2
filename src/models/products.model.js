@@ -40,9 +40,9 @@ function updateProduct(id, name, price, picture){
     const index = products.findIndex(item => item.id === id);
     if (index === -1) return null;
 
-    products[index].name = name;
-    products[index].price = price;
-    products[index].picture = picture
+    name ? products[index].name = name : products[index].name
+    price ? products[index].price = price : products[index].price
+    picture ? products[index].picture = picture : products[index].picture
     return products[index];
 }
 
